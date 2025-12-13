@@ -21,11 +21,12 @@ The model achieved an **F1-Score of 0.72** (up from a baseline of 0.58).
 | Positive | 0.89 | 0.86 | 0.87 |
 
 ### Training Performance
-![Training Curves](images/training_curves.png)
+![Training Curves](images/loss_curve.png)
+![Training Curves](images/accuracy_curve.png)
 *The model shows healthy convergence with minimal overfitting due to regularization techniques.*
 
 ### Data Insights
-![Positive Words](images/positive_word_freq.png)
+![Positive Words](images/positive_tweets.png)
 *Positive tweets are dominated by terms like "growth", "value", and "trust".*
 
 ## 🛠️ Technologies Used

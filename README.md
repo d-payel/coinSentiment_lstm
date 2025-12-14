@@ -27,21 +27,6 @@ The data was split to ensure robust evaluation:
 - **Validation Set:** 390 samples
 - **Test Set:** 391 samples
 
-### Text Processing Pipeline
-1.  **Tokenization & Lemmatization:** Tweets were tokenized and lemmatized using a POS (Parts of Speech) tagger to ensure words are reduced to their root form correctly (e.g., "running" -> "run").
-2.  **Target Encoding:** Sentiment labels were encoded using `LabelEncoder`.
-3.  **Sequence Statistics:** 
-    - Average tweet length: **28.4 words**
-    - Maximum tweet length: **57 words**
-4.  **Padding:** All sequences were padded to a fixed length of **80** to accommodate the longest tweets while allowing a safety buffer.
-
-##  Model Architecture & Embeddings
-
-- **Word Embeddings:** utilized pre-trained **GloVe embeddings (Global Vectors for Word Representation)**.
-    - Version: 6 Billion tokens
-    - Dimension: 200-dimensional vectors
-    - *Note: Transfer learning via GloVe helps the model understand semantic relationships between words even with a small dataset.*
-
 ### Data Insights
 <!--![Positive Words](images/positive_tweets.png)-->
 *Positive tweets are dominated by terms like "growth", "value", and "trust".*
@@ -75,7 +60,43 @@ As seen in the Confusion Matrix, the model excels at detecting Positive sentimen
 ![Training Curves](images/accuracy_curve.png)-->
 *The model shows healthy convergence with minimal overfitting due to regularization techniques.*
 
-## 🛠️ Technologies Used
+
+##  Data Engineering Pipeline: From Scraping to Synthetic Augmentation
+
+Unlike standard projects that use pre-cleaned Kaggle datasets, I built this dataset from scratch to simulate a real-world data collection pipeline.
+
+### 1. Data Collection & Scraping
+- **Custom Scraper:** Implemented a custom scraping script to fetch raw crypto-related tweets.
+- **Diversity Injection:** To ensure coverage of niche market events, I gathered additional headlines and context using **Perplexity AI** (Sonar model) prompting.
+
+### 2. Synthetic Data Augmentation
+To tackle the data scarcity problem (common in specific domain NLP), I developed a synthetic generation pipeline:
+- **Prompt Engineering:** Designed prompts to generate **10 variations** for each original tweet, preserving the core sentiment but varying the vocabulary and sentence structure.
+- **Impact:** Expanded the dataset size significantly while maintaining semantic consistency.
+
+### 3. "Human-in-the-Loop" Annotation Strategy
+Labeling thousands of tweets manually is inefficient. I used a semi-supervised approach:
+1.  **Seed Set:** Manually annotated the first **150 tweets** to establish ground truth guidelines.
+2.  **AI-Assisted Labeling:** Used Large Language Model (LLM) prompting to label the remaining dataset based on the patterns of the seed set.
+3.  **Verification:** Randomly sampled the AI-labeled data to ensure quality control.
+
+> **Result:** A robust, balanced dataset of more than 2k+ samples created from a small seed of raw observations.
+### Text Processing Pipeline
+1.  **Tokenization & Lemmatization:** Tweets were tokenized and lemmatized using a POS (Parts of Speech) tagger to ensure words are reduced to their root form correctly (e.g., "running" -> "run").
+2.  **Target Encoding:** Sentiment labels were encoded using `LabelEncoder`.
+3.  **Sequence Statistics:** 
+    - Average tweet length: **28.4 words**
+    - Maximum tweet length: **57 words**
+4.  **Padding:** All sequences were padded to a fixed length of **80** to accommodate the longest tweets while allowing a safety buffer.
+
+##  Model Architecture & Embeddings
+
+- **Word Embeddings:** utilized pre-trained **GloVe embeddings (Global Vectors for Word Representation)**.
+    - Version: 6 Billion tokens
+    - Dimension: 200-dimensional vectors
+    - *Note: Transfer learning via GloVe helps the model understand semantic relationships between words even with a small dataset.*
+      
+##  Technologies Used
 - **Python**
 - **TensorFlow / Keras** (Model building)
 - **Scikit-Learn** (GridSearch, Metrics)
